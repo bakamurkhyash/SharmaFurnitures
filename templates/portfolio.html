@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Work | Sharma Furniture Portfolio</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <style>
+        .portfolio-header {
+            padding: 10rem 10% 4rem;
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+
+        .filter-nav {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .filter-btn {
+            background: none;
+            border: none;
+            font-family: inherit;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: var(--text-color);
+            cursor: pointer;
+            opacity: 0.6;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            opacity: 1;
+            color: var(--secondary-color);
+        }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 4rem 10%;
+        }
+
+        .work-card {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .work-img {
+            aspect-ratio: 16/10;
+            background: var(--accent-light);
+            width: 100%;
+        }
+
+        .work-info {
+            padding: 1.5rem;
+        }
+
+        .work-info h3 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .work-info p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo"><a href="/" style="text-decoration: none; color: inherit;">SHARMA FURNITURE.</a></div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/portfolio">Portfolio</a>
+            <a href="/#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="portfolio-header">
+        <a href="/" class="back-link">← Back to home</a>
+        <h1>Our Previous Works</h1>
+        <p>A showcase of handcrafted excellence and technical precision.</p>
+    </header>
+
+    <div class="filter-nav">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Living Room</button>
+        <button class="filter-btn">Bedroom</button>
+        <button class="filter-btn">Office</button>
+    </div>
+
+    <section class="work-grid">
+        <!-- Sample Project 1 -->
+        <div class="work-card">
+            <div class="work-img"></div>
+            <div class="work-info">
+                <h3>Bespoke Walnut Sofa</h3>
+                <p>Custom built for a modern residence in Mumbai. Features hand-carved legs and premium upholstery.</p>
+            </div>
+        </div>
+        <!-- Sample Project 2 -->
+        <div class="work-card">
+            <div class="work-img"></div>
+            <div class="work-info">
+                <h3>Oak Dining Table</h3>
+                <p>Minimalist design with a focus on natural wood grain. Built on-spot for a seamless fit.</p>
+            </div>
+        </div>
+        <!-- Sample Project 3 -->
+        <div class="work-card">
+            <div class="work-img"></div>
+            <div class="work-info">
+                <h3>Modular Wardrobe</h3>
+                <p>Space-optimized storage solution with brass inlay handles.</p>
+            </div>
+        </div>
+        <!-- Sample Project 4 -->
+        <div class="work-card">
+            <div class="work-img"></div>
+            <div class="work-info">
+                <h3>Teak Wood Bed Frame</h3>
+                <p>A classic design commissioned from a reference image provided by the client.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-bottom">
+            &copy; 2026 Sharma Furniture. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+
+</html>
