@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation Calculator | Sharma Furniture</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/calculator.css') }}">
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">SHARMA FURNITURE.</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/#about">The Artisan</a>
+            <a href="/#services">Services</a>
+            <a href="/portfolio">Portfolio</a>
+        </div>
+    </nav>
+
+    <section class="calculator-hero"
+        style="background: var(--primary-color); color: white; padding: 12rem 10% 8rem; text-align: center;">
+        <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">Quotation Calculator</h1>
+        <p style="opacity: 0.8; font-weight: 300;">Estimate the cost of your custom furniture project in seconds.</p>
+    </section>
+
+    <div class="calculator-container">
+        <div class="service-toggle">
+            <div id="buildToggle" class="toggle-btn active" onclick="setService('building')">Building</div>
+            <div id="polishToggle" class="toggle-btn" onclick="setService('polishing')">Polishing</div>
+        </div>
+
+        <div class="calc-grid">
+            <div class="calc-form">
+                <div id="buildingFields">
+                    <div class="form-group">
+                        <label for="itemType">Item Type</label>
+                        <select id="itemType" onchange="updateCalc()">
+                            <option value="wardrobe">Wardrobe (Double Skin)</option>
+                            <option value="bed_king">King Size Bed (with storage)</option>
+                            <option value="bed_queen">Queen Size Bed (with storage)</option>
+                            <option value="tv_unit">TV Unit (Paneling Style)</option>
+                            <option value="other_building">Other (Custom Area)</option>
+                        </select>
+                    </div>
+
+                    <div id="buildingDims" class="form-group">
+                        <label>Dimensions (Feet)</label>
+                        <div class="dim-input-group">
+                            <input type="number" id="buildLen" placeholder="Width" value="6" oninput="updateCalc()">
+                            <input type="number" id="buildHt" placeholder="Height" value="8" oninput="updateCalc()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="finishType">Material / Finish</label>
+                        <select id="finishType" onchange="updateCalc()">
+                            <option value="laminate">Premium Laminate</option>
+                            <option value="veneer">Natural Wood Veneer</option>
+                            <option value="teak">Solid Teak Wood</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="polishingFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="polishItem">Type of Service</label>
+                        <select id="polishItem" onchange="updateCalc()">
+                            <option value="melamine">Melamine Polish</option>
+                            <option value="pu">PU Polish (High Gloss/Matt)</option>
+                            <option value="deco">Deco Paint</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Total Surface Area (Sq. Ft.)</label>
+                        <input type="number" id="polishArea" placeholder="Enter total area" value="10"
+                            oninput="updateCalc()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-panel">
+                <h3>Estimated Quote</h3>
+                <div class="price-display">
+                    <span>₹</span><span id="finalPrice">0</span>
+                </div>
+                <p style="opacity: 0.7; font-size: 0.8rem; margin-bottom: 2rem;">*Exc. material for some builds</p>
+
+                <div class="quotation-summary">
+                    <div class="summary-item">
+                        <span>Service</span>
+                        <span id="summService">Building</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Details</span>
+                        <span id="summDetails">Wardrobe (6' x 8')</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Finish</span>
+                        <span id="summFinish">Laminate</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a href="/#contact" class="btn" style="flex: 2; border-color: var(--secondary-color);">Book
+                        Consultation</a>
+                    <button onclick="window.print()" class="btn print-btn"
+                        style="flex: 1; background: transparent; color: var(--secondary-color); border-color: var(--secondary-color);">Print</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer style="margin-top: 4rem;">
+        <div class="footer-bottom">
+            &copy; 2026 Sharma Furniture. This is an approximate estimate based on current market rates.
+        </div>
+    </footer>
+
+    <script>
+        let currentService = 'building';
+
+        const rates = {
+            building: {
+                wardrobe: { laminate: 1500, veneer: 2200, teak: 3000 },
+                tv_unit: { laminate: 1200, veneer: 1800, teak: 2500 },
+                other_building: { laminate: 1400, veneer: 2000, teak: 2800 },
+                fixed: {
+                    bed_king: { laminate: 45000, veneer: 65000, teak: 85000 },
+                    bed_queen: { laminate: 35000, veneer: 55000, teak: 75000 }
+                }
+            },
+            polishing: {
+                melamine: 120,
+                pu: 300,
+                deco: 250
+            }
+        };
+
+        function setService(service) {
+            currentService = service;
+            document.getElementById('buildToggle').classList.toggle('active', service === 'building');
+            document.getElementById('polishToggle').classList.toggle('active', service === 'polishing');
+
+            document.getElementById('buildingFields').style.display = service === 'building' ? 'block' : 'none';
+            document.getElementById('polishingFields').style.display = service === 'polishing' ? 'block' : 'none';
+
+            updateCalc();
+        }
+
+        function updateCalc() {
+            let total = 0;
+            const summService = document.getElementById('summService');
+            const summDetails = document.getElementById('summDetails');
+            const summFinish = document.getElementById('summFinish');
+            const finalPriceDisp = document.getElementById('finalPrice');
+
+            if (currentService === 'building') {
+                const item = document.getElementById('itemType').value;
+                const finish = document.getElementById('finishType').value;
+                summService.innerText = "Building";
+                summFinish.innerText = finish.charAt(0).toUpperCase() + finish.slice(1);
+
+                if (rates.building.fixed[item]) {
+                    total = rates.building.fixed[item][finish];
+                    document.getElementById('buildingDims').style.opacity = '0.3';
+                    document.getElementById('buildingDims').style.pointerEvents = 'none';
+                    summDetails.innerText = item.split('_').join(' ').toUpperCase();
+                } else {
+                    document.getElementById('buildingDims').style.opacity = '1';
+                    document.getElementById('buildingDims').style.pointerEvents = 'auto';
+                    const len = parseFloat(document.getElementById('buildLen').value) || 0;
+                    const ht = parseFloat(document.getElementById('buildHt').value) || 0;
+                    const area = len * ht;
+                    total = area * (rates.building[item][finish] || rates.building.other_building[finish]);
+                    summDetails.innerText = `${item.toUpperCase()} (${len}' x ${ht}')`;
+                }
+            } else {
+                const type = document.getElementById('polishItem').value;
+                const area = parseFloat(document.getElementById('polishArea').value) || 0;
+                total = area * rates.polishing[type];
+
+                summService.innerText = "Polishing";
+                summDetails.innerText = `Area: ${area} Sq. Ft.`;
+                summFinish.innerText = type.toUpperCase();
+            }
+
+            finalPriceDisp.innerText = total.toLocaleString('en-IN');
+        }
+
+        // Initialize
+        updateCalc();
+    </script>
+</body>
+
+</html>
