@@ -1,157 +1,183 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Work | Sharma Furniture Portfolio</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-    <style>
-        .portfolio-header {
-            padding: 10rem 10% 4rem;
-            background: var(--primary-color);
-            color: white;
-            text-align: center;
-        }
+{% block title %}Our Work | Sharma Furniture Portfolio{% endblock %}
 
-        .filter-nav {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            padding: 2rem 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
+{% block head %}
+<style>
+    .portfolio-header {
+        padding: 10rem 10% 4rem;
+        background: var(--primary-color);
+        color: white;
+        text-align: center;
+    }
 
-        .filter-btn {
-            background: none;
-            border: none;
-            font-family: inherit;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            color: var(--text-color);
-            cursor: pointer;
-            opacity: 0.6;
-            transition: var(--transition);
-        }
+    .filter-nav {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        padding: 2rem 0;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
 
-        .filter-btn:hover,
-        .filter-btn.active {
-            opacity: 1;
-            color: var(--secondary-color);
-        }
+    .filter-btn {
+        background: none;
+        border: none;
+        font-family: inherit;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 600;
+        color: var(--text-color);
+        cursor: pointer;
+        opacity: 0.6;
+        transition: var(--transition);
+    }
 
+    .filter-btn:hover,
+    .filter-btn.active {
+        opacity: 1;
+        color: var(--secondary-color);
+    }
+
+    .work-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        padding: 4rem 10%;
+    }
+
+    .work-item {
+        aspect-ratio: 4/5;
+        background: var(--accent-light);
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+    }
+
+    .work-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .work-item:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .work-item:hover img {
+        transform: scale(1.08);
+    }
+
+    .work-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 2rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        color: white;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.4s ease;
+    }
+
+    .work-item:hover .work-overlay {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .work-overlay h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 500;
+        letter-spacing: 1px;
+    }
+
+    .work-overlay p {
+        margin: 0.5rem 0 0;
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    /* Intersection Observer Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 1rem;
+        color: var(--secondary-color);
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+    }
+
+    @media (max-width: 768px) {
         .work-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            padding: 4rem 10%;
+            grid-template-columns: 1fr;
+            padding: 2rem 5%;
         }
+    }
+</style>
+{% endblock %}
 
-        .work-card {
-            background: white;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            transition: var(--transition);
-        }
+{% block content %}
+<header class="portfolio-header">
+    <a href="/" class="back-link">← Back to home</a>
+    <h1>Our Previous Works</h1>
+    <p>A showcase of handcrafted excellence and technical precision.</p>
+</header>
 
-        .work-img {
-            aspect-ratio: 16/10;
-            background: var(--accent-light);
-            width: 100%;
-        }
+<div class="filter-nav">
+    <button class="filter-btn active">All</button>
+    <button class="filter-btn">Custom Designs</button>
+    <button class="filter-btn">Modern</button>
+    <button class="filter-btn">Classic</button>
+</div>
 
-        .work-info {
-            padding: 1.5rem;
-        }
-
-        .work-info h3 {
-            font-size: 1.4rem;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .work-info p {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 1rem;
-            color: var(--secondary-color);
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-    </style>
-</head>
-
-<body>
-
-    <nav>
-        <div class="logo"><a href="/" style="text-decoration: none; color: inherit;">SHARMA FURNITURE.</a></div>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/portfolio">Portfolio</a>
-            <a href="/#contact">Contact</a>
+<section class="work-grid">
+    {% for image in images %}
+    <div class="work-item reveal">
+        <img src="{{ image.secure_url }}" alt="{{ image.display_name or 'Sharma Furniture Work' }}" loading="lazy">
+        <div class="work-overlay">
+            <h3>{{ image.display_name.replace('_', ' ').title() if image.display_name else 'Premium Furniture' }}</h3>
+            <p>{{ image.asset_folder if image.asset_folder else 'Handcrafted with Love' }}</p>
         </div>
-    </nav>
-
-    <header class="portfolio-header">
-        <a href="/" class="back-link">← Back to home</a>
-        <h1>Our Previous Works</h1>
-        <p>A showcase of handcrafted excellence and technical precision.</p>
-    </header>
-
-    <div class="filter-nav">
-        <button class="filter-btn active">All</button>
-        <button class="filter-btn">Living Room</button>
-        <button class="filter-btn">Bedroom</button>
-        <button class="filter-btn">Office</button>
     </div>
+    {% else %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem;">
+        <p>No images found in the gallery yet.</p>
+    </div>
+    {% endfor %}
+</section>
 
-    <section class="work-grid">
-        <!-- Sample Project 1 -->
-        <div class="work-card">
-            <div class="work-img"></div>
-            <div class="work-info">
-                <h3>Bespoke Walnut Sofa</h3>
-                <p>Custom built for a modern residence in Mumbai. Features hand-carved legs and premium upholstery.</p>
-            </div>
-        </div>
-        <!-- Sample Project 2 -->
-        <div class="work-card">
-            <div class="work-img"></div>
-            <div class="work-info">
-                <h3>Oak Dining Table</h3>
-                <p>Minimalist design with a focus on natural wood grain. Built on-spot for a seamless fit.</p>
-            </div>
-        </div>
-        <!-- Sample Project 3 -->
-        <div class="work-card">
-            <div class="work-img"></div>
-            <div class="work-info">
-                <h3>Modular Wardrobe</h3>
-                <p>Space-optimized storage solution with brass inlay handles.</p>
-            </div>
-        </div>
-        <!-- Sample Project 4 -->
-        <div class="work-card">
-            <div class="work-img"></div>
-            <div class="work-info">
-                <h3>Teak Wood Bed Frame</h3>
-                <p>A classic design commissioned from a reference image provided by the client.</p>
-            </div>
-        </div>
-    </section>
+<script>
+    // Intersection Observer for reveal animations
+    const observerOptions = {
+        threshold: 0.1
+    };
 
-    <footer>
-        <div class="footer-bottom">
-            &copy; 2026 Sharma Furniture. All rights reserved.
-        </div>
-    </footer>
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
 
-</body>
-
-</html>
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+{% endblock %}

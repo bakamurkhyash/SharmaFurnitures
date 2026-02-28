@@ -1,135 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sharma Furniture | Fine Bespoke Craftsmanship</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-</head>
+{% block content %}
+<header class="hero">
+    <div class="hero-content">
+        <p>ESTABLISHED EXCELLENCE</p>
+        <h1>Handcrafted Elegance For Your Home</h1>
+        <p>Bespoke furniture tailored to your space by Arvind Sharma.</p>
+        <a href="#contact" class="btn">Start a Project</a>
+    </div>
+</header>
 
-<body>
-
-    <nav>
-        <div class="logo">SHARMA FURNITURE.</div>
-        <div class="nav-links">
-            <a href="/calculator">Quotation</a>
-            <a href="#about">The Artisan</a>
-            <a href="#services">Services</a>
-            <a href="/portfolio">Portfolio</a>
-            <a href="#contact">Contact</a>
+<section id="about">
+    <div class="about-container">
+        <div class="about-image">
+            <img src="{{ url_for('static', filename='images/arvind.png') }}" alt="Arvind Sharma">
         </div>
-    </nav>
-
-    <header class="hero">
-        <div class="hero-content">
-            <p>ESTABLISHED EXCELLENCE</p>
-            <h1>Handcrafted Elegance For Your Home</h1>
-            <p>Bespoke furniture tailored to your space by Arvind Sharma.</p>
-            <a href="#contact" class="btn">Start a Project</a>
-        </div>
-    </header>
-
-    <section id="about">
-        <div class="about-container">
-            <div class="about-image">
-                <!-- Image placeholder for Arvind Sharma at work -->
+        <div class="about-text">
+            <div class="section-title" style="text-align: left;">
+                <h2>The Artisan</h2>
+                <div style="margin: 0;"></div>
             </div>
-            <div class="about-text">
-                <div class="section-title" style="text-align: left;">
-                    <h2>The Artisan</h2>
-                    <div style="margin: 0;"></div>
-                </div>
-                <p>Arvind Sharma has spent decades perfecting the art of woodworking. Every piece created at Sharma
-                    Furniture is a testament to quality, durability, and timeless design. Whether it's a statement
-                    dining table or a custom-fitted wardrobe, our goal is to bring your vision to life with precision
-                    and passion.</p>
-                <br>
-                <p>We believe that furniture isn't just about utility; it's about creating an atmosphere that reflects
-                    your personality and lasts for generations.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="services">
-        <div class="section-title">
-            <h2>Our Services</h2>
-            <div></div>
-        </div>
-        <div class="services-grid">
-            <div class="service-card">
-                <h3>On-Spot Building</h3>
-                <p>Complete workshop setup at your doorstep. We build and install furniture directly in your space for a
-                    perfect fit.</p>
-            </div>
-            <div class="service-card">
-                <h3>Remote Workshop</h3>
-                <p>Detailed craftsmanship performed at our dedicated facility, delivered and assembled with white-glove
-                    service.</p>
-            </div>
-            <div class="service-card">
-                <h3>Bespoke Design</h3>
-                <p>Have a reference image or a rough sketch? We specialize in transforming ideas into high-quality
-                    reality.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="gallery">
-        <div class="section-title">
-            <h2>The Collection</h2>
-            <div></div>
+            <p>Arvind Sharma has spent years perfecting the art of woodworking. Every piece created at Sharma
+                Furniture is a testament to quality, durability, and timeless design. Whether it's a statement
+                dining table or a custom-fitted wardrobe, our goal is to bring your vision to life with precision
+                and passion.</p>
             <br>
-            <a href="/portfolio"
-                style="color: var(--secondary-color); text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;">View
-                All Works &rarr;</a>
+            <p>We believe that furniture isn't just about utility; it's about creating an atmosphere that reflects
+                your personality and lasts for generations.</p>
         </div>
-        <div class="gallery-grid">
-            <div class="gallery-item"><!-- Placeholder for Sofa --></div>
-            <div class="gallery-item"><!-- Placeholder for Table --></div>
-            <div class="gallery-item"><!-- Placeholder for Bed --></div>
-            <div class="gallery-item"><!-- Placeholder for Wardrobe --></div>
-            <div class="gallery-item"><!-- Placeholder for Chest --></div>
-            <div class="gallery-item"><!-- Placeholder for Desk --></div>
-        </div>
-    </section>
+    </div>
+</section>
 
-    <section id="contact" style="background: #f4eee8;">
-        <div class="section-title">
-            <h2>Work with Arvind</h2>
-            <div></div>
+<section id="services">
+    <div class="section-title">
+        <h2>Our Services</h2>
+        <div></div>
+    </div>
+    <div class="services-grid">
+        <div class="service-card">
+            <h3>On-Spot Building</h3>
+            <p>Complete workshop setup at your doorstep. We build and install furniture directly in your space for a
+                perfect fit.</p>
         </div>
-        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
-            <p>Ready to elevate your home? Contact Arvind Sharma today for a consultation and a quote.</p>
-            <div style="margin-top: 2rem; font-size: 1.5rem; font-weight: 600; color: #4a3728;">
-                +91 (Call to Action)
-            </div>
+        <div class="service-card">
+            <h3>Remote Workshop</h3>
+            <p>Detailed craftsmanship performed at our dedicated facility, delivered and assembled with white-glove
+                service.</p>
         </div>
-    </section>
+        <div class="service-card">
+            <h3>Bespoke Design</h3>
+            <p>Have a reference image or a rough sketch? We specialize in transforming ideas into high-quality
+                reality.</p>
+        </div>
+    </div>
+</section>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-col">
-                <div class="logo" style="color: white; margin-bottom: 1rem;">SHARMA FURNITURE.</div>
-                <p style="opacity: 0.7;">Crafting legacies, one piece at a time.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Quick Links</h4>
-                <p><a href="#about" style="color: white; text-decoration: none;">About</a></p>
-                <p><a href="#services" style="color: white; text-decoration: none;">Services</a></p>
-                <p><a href="#gallery" style="color: white; text-decoration: none;">Gallery</a></p>
-            </div>
-            <div class="footer-col">
-                <h4>Proprietor</h4>
-                <p>Arvind Sharma</p>
-                <p>Craftsman & Designer</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2026 Sharma Furniture. All rights reserved.
-        </div>
-    </footer>
+<section id="gallery">
+    <div class="section-title">
+        <h2>The Collection</h2>
+        <div></div>
+        <br>
+        <a href="/portfolio"
+            style="color: var(--secondary-color); text-decoration: none; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem;">View
+            All Works &rarr;</a>
+    </div>
+    <div class="gallery-grid">
+        <div class="gallery-item"><!-- Placeholder for Sofa --></div>
+        <div class="gallery-item"><!-- Placeholder for Table --></div>
+        <div class="gallery-item"><!-- Placeholder for Bed --></div>
+        <div class="gallery-item"><!-- Placeholder for Wardrobe --></div>
+        <div class="gallery-item"><!-- Placeholder for Chest --></div>
+        <div class="gallery-item"><!-- Placeholder for Desk --></div>
+    </div>
+</section>
 
-</body>
-
-</html>
+<section id="contact" style="background: #f4eee8;">
+    <div class="section-title">
+        <h2>Work with Arvind</h2>
+        <div></div>
+    </div>
+    <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+        <p>Ready to elevate your home? Contact Arvind Sharma today for a consultation and a quote.</p>
+        <div style="margin-top: 2rem; font-size: 1.5rem; font-weight: 600; color: #4a3728;">
+            +91 (Call to Action)
+        </div>
+    </div>
+</section>
+{% endblock %}

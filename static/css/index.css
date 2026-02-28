@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-    --primary-color: #4a3728; /* Deep Walnut */
-    --secondary-color: #c9a66b; /* Brass/Gold accent */
-    --bg-color: #fdfaf7; /* Warm Off-white */
+    --primary-color: #4a3728;
+    /* Deep Walnut */
+    --secondary-color: #c9a66b;
+    /* Brass/Gold accent */
+    --bg-color: #fdfaf7;
+    /* Warm Off-white */
     --text-color: #2d241e;
-    --accent-light: #eaddca; /* Oak */
+    --accent-light: #eaddca;
+    /* Oak */
     --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -23,7 +27,10 @@ body {
     overflow-x: hidden;
 }
 
-h1, h2, h3, .brand-font {
+h1,
+h2,
+h3,
+.brand-font {
     font-family: 'Playfair Display', serif;
 }
 
@@ -76,9 +83,9 @@ nav {
     justify-content: center;
     text-align: center;
     padding: 0 10%;
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('/static/images/hero_furniture.jpg') center/cover no-repeat;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/images/hero_furniture.jpg') center/cover no-repeat;
     /* Placeholder fallback */
-    background-color: var(--primary-color); 
+    background-color: var(--primary-color);
     color: white;
 }
 
@@ -152,7 +159,7 @@ section {
 .service-card {
     background: white;
     padding: 3rem;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
     transition: var(--transition);
     position: relative;
     overflow: hidden;
@@ -160,7 +167,7 @@ section {
 
 .service-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
 }
 
 .service-card h3 {
@@ -215,6 +222,14 @@ section {
     height: 500px;
     background: var(--accent-light);
     border-radius: 4px;
+    overflow: hidden;
+}
+
+.about-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 /* --- Footer --- */
@@ -239,20 +254,38 @@ footer {
 .footer-bottom {
     text-align: center;
     padding-top: 2rem;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.8rem;
     opacity: 0.6;
 }
 
 /* --- Animations --- */
 @keyframes fadeInScale {
-    from { opacity: 0; transform: scale(1.05); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 @media (max-width: 768px) {
-    .hero h1 { font-size: 3rem; }
-    .about-container { flex-direction: column; }
-    nav { padding: 1rem 5%; }
-    .nav-links { display: none; }
+    .hero h1 {
+        font-size: 3rem;
+    }
+
+    .about-container {
+        flex-direction: column;
+    }
+
+    nav {
+        padding: 1rem 5%;
+    }
+
+    .nav-links {
+        display: none;
+    }
 }
