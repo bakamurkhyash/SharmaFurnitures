@@ -15,7 +15,7 @@ result = cloudinary.api.resources(type = "upload", max_results = 77)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', images=result.get('resources', [])[:6])
 
 @app.route('/gallery')
 def gallery():

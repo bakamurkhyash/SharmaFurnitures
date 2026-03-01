@@ -65,12 +65,18 @@
             All Works &rarr;</a>
     </div>
     <div class="gallery-grid">
+        {% for image in images %}
+        <div class="gallery-item">
+            <img src="{{ image.secure_url }}" alt="{{ image.display_name or 'Sharma Furniture Work' }}" loading="lazy">
+        </div>
+        {% else %}
         <div class="gallery-item"><!-- Placeholder for Sofa --></div>
         <div class="gallery-item"><!-- Placeholder for Table --></div>
         <div class="gallery-item"><!-- Placeholder for Bed --></div>
         <div class="gallery-item"><!-- Placeholder for Wardrobe --></div>
         <div class="gallery-item"><!-- Placeholder for Chest --></div>
         <div class="gallery-item"><!-- Placeholder for Desk --></div>
+        {% endfor %}
     </div>
 </section>
 
@@ -82,7 +88,7 @@
     <div style="max-width: 600px; margin: 0 auto; text-align: center;">
         <p>Ready to elevate your home? Contact Arvind Sharma today for a consultation and a quote.</p>
         <div style="margin-top: 2rem; font-size: 1.5rem; font-weight: 600; color: #4a3728;">
-            +91 (Call to Action)
+            +91 9146976831
         </div>
     </div>
 </section>
