@@ -23,30 +23,35 @@
             <div id="buildingFields">
                 <div class="form-group">
                     <label for="itemType">Item Type</label>
-                    <select id="itemType" onchange="updateCalc()">
-                        <option value="wardrobe">Wardrobe (Double Skin)</option>
-                        <option value="bed_king">King Size Bed (with storage)</option>
-                        <option value="bed_queen">Queen Size Bed (with storage)</option>
-                        <option value="tv_unit">TV Unit (Paneling Style)</option>
-                        <option value="other_building">Other (Custom Area)</option>
+                    <select id="itemType" onchange="updateBuildingInputs()">
+                        <option value="wardrobe_bed">Wardrobe & bed (₹1500/sqft)</option>
+                        <option value="tv_unit">TV unit (₹1200/sqft)</option>
+                        <option value="partition">Partition (₹900/sqft)</option>
+                        <option value="designer_partition">Designer partition (₹1500/sqft)</option>
+                        <option value="loft">Loft (₹950/sqft)</option>
+                        <option value="wooden_door">Wooden Door (with) (₹4500/unit)</option>
+                        <option value="window_2_track">Window (2 tracks) (₹250/sqft)</option>
+                        <option value="window_3_track">Window (3 track) (₹290/sqft)</option>
+                        <option value="sofa_cum_bed">Sofa cum bed (₹1500/sqft)</option>
+                        <option value="sofa_frame">Sofa Frame (₹300/sqft)</option>
+                        <option value="ceiling">Ceiling (wooden) (₹800/sqft)</option>
+                        <option value="kitchen_trolley_basket">Kitchen trolley (basket) (₹3500/rft)</option>
+                        <option value="kitchen_trolley_tandem">Kitchen trolley (tandem) (₹6500/rft)</option>
+                        <option value="kitchen_wardrobe">Kitchen wardrobe (₹1200/sqft)</option>
+                        <option value="kitchen_granite_door">Kitchen granite wardrobe door (₹1050/sqft)</option>
+                        <option value="palmet">Palmet (₹550/sqft)</option>
+                        <option value="office_furniture">Office furniture (₹1500/sqft)</option>
+                        <option value="counter">Counter (₹1300/sqft)</option>
+                        <option value="teapoy">Teapoy (₹800/sqft)</option>
+                        <option value="door_fitting">Door fitting (₹850/unit)</option>
                     </select>
                 </div>
 
                 <div id="buildingDims" class="form-group">
-                    <label>Dimensions (Feet)</label>
-                    <div class="dim-input-group">
-                        <input type="number" id="buildLen" placeholder="Width" value="6" oninput="updateCalc()">
-                        <input type="number" id="buildHt" placeholder="Height" value="8" oninput="updateCalc()">
+                    <label id="dimsLabel">Dimensions / Quantity</label>
+                    <div id="dimsInputs" class="dim-input-group">
+                        <!-- Inputs injected by JS -->
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="finishType">Material / Finish</label>
-                    <select id="finishType" onchange="updateCalc()">
-                        <option value="laminate">Premium Laminate</option>
-                        <option value="veneer">Natural Wood Veneer</option>
-                        <option value="teak">Solid Teak Wood</option>
-                    </select>
                 </div>
             </div>
 
@@ -54,10 +59,22 @@
                 <div class="form-group">
                     <label for="polishItem">Type of Service</label>
                     <select id="polishItem" onchange="updateCalc()">
-                        <option value="melamine">Melamine Polish</option>
-                        <option value="pu">PU Polish (High Gloss/Matt)</option>
-                        <option value="deco">Deco Paint</option>
+                        <optgroup label="Wood polish..">
+                            <option value="hand_polish">Hand Polish (₹50/sqft)</option>
+                            <option value="melamine_polish">Malamine Polish (₹80/sqft)</option>
+                            <option value="pu_polish">PU Polish (₹120/sqft)</option>
+                            <option value="emporio_pu_polish">Emporio PU Polish (₹150/sqft)</option>
+                        </optgroup>
+                        <optgroup label="PU and DECO">
+                            <option value="epoxy_paint">Epoxy Paint (₹300/sqft)</option>
+                            <option value="pu_paints">PU Paints (₹350/sqft)</option>
+                            <option value="deco_paints">DECO Paints (₹380/sqft)</option>
+                        </optgroup>
                     </select>
+                    <small style="display:block; margin-top:0.5rem; color:var(--text-color); opacity:0.8;">
+                        Apply to: Green board, brown board, plywoods, Metal door, wardrobe, iron bed, iron pipe, Iron
+                        Gate, wood gate
+                    </small>
                 </div>
 
                 <div class="form-group">
@@ -82,11 +99,11 @@
                 </div>
                 <div class="summary-item">
                     <span>Details</span>
-                    <span id="summDetails">Wardrobe (6' x 8')</span>
+                    <span id="summDetails">Wardrobe & bed</span>
                 </div>
                 <div class="summary-item">
-                    <span>Finish</span>
-                    <span id="summFinish">Laminate</span>
+                    <span>Pricing</span>
+                    <span id="summFinish">1500 / sqft</span>
                 </div>
             </div>
 
@@ -105,18 +122,35 @@
 
     const rates = {
         building: {
-            wardrobe: { laminate: 1500, veneer: 2200, teak: 3000 },
-            tv_unit: { laminate: 1200, veneer: 1800, teak: 2500 },
-            other_building: { laminate: 1400, veneer: 2000, teak: 2800 },
-            fixed: {
-                bed_king: { laminate: 45000, veneer: 65000, teak: 85000 },
-                bed_queen: { laminate: 35000, veneer: 55000, teak: 75000 }
-            }
+            wardrobe_bed: { price: 1500, type: 'sqft', name: 'Wardrobe & bed' },
+            tv_unit: { price: 1200, type: 'sqft', name: 'TV unit' },
+            partition: { price: 900, type: 'sqft', name: 'Partition' },
+            designer_partition: { price: 1500, type: 'sqft', name: 'Designer partition' },
+            loft: { price: 950, type: 'sqft', name: 'Loft' },
+            wooden_door: { price: 4500, type: 'unit', name: 'Wooden Door (with)' },
+            window_2_track: { price: 250, type: 'sqft', name: 'Window (2 tracks) (regular material)' },
+            window_3_track: { price: 290, type: 'sqft', name: 'Window (3 track) (regular material)' },
+            sofa_cum_bed: { price: 1500, type: 'sqft', name: 'Sofa cum bed' },
+            sofa_frame: { price: 300, type: 'sqft', name: 'Sofa Frame' },
+            ceiling: { price: 800, type: 'sqft', name: 'Ceiling (wooden)' },
+            kitchen_trolley_basket: { price: 3500, type: 'rft', name: 'Kitchen trolley (basket)' },
+            kitchen_trolley_tandem: { price: 6500, type: 'rft', name: 'Kitchen trolley (tandem)' },
+            kitchen_wardrobe: { price: 1200, type: 'sqft', name: 'Kitchen wardrobe' },
+            kitchen_granite_door: { price: 1050, type: 'sqft', name: 'Kitchen granite wardrobe door' },
+            palmet: { price: 550, type: 'sqft', name: 'Palmet' },
+            office_furniture: { price: 1500, type: 'sqft', name: 'Office furniture' },
+            counter: { price: 1300, type: 'sqft', name: 'Counter' },
+            teapoy: { price: 800, type: 'sqft', name: 'Teapoy' },
+            door_fitting: { price: 850, type: 'unit', name: 'Door fitting' }
         },
         polishing: {
-            melamine: 120,
-            pu: 300,
-            deco: 250
+            hand_polish: { price: 50, name: 'Hand Polish' },
+            melamine_polish: { price: 80, name: 'Malamine Polish' },
+            pu_polish: { price: 120, name: 'PU Polish' },
+            emporio_pu_polish: { price: 150, name: 'Emporio PU Polish' },
+            epoxy_paint: { price: 300, name: 'Epoxy Paint' },
+            pu_paints: { price: 350, name: 'PU Paints' },
+            deco_paints: { price: 380, name: 'DECO Paints' }
         }
     };
 
@@ -127,6 +161,37 @@
 
         document.getElementById('buildingFields').style.display = service === 'building' ? 'block' : 'none';
         document.getElementById('polishingFields').style.display = service === 'polishing' ? 'block' : 'none';
+
+        if (service === 'building') {
+            updateBuildingInputs();
+        } else {
+            updateCalc();
+        }
+    }
+
+    function updateBuildingInputs() {
+        const item = document.getElementById('itemType').value;
+        const config = rates.building[item];
+        const dimsInputs = document.getElementById('dimsInputs');
+        const dimsLabel = document.getElementById('dimsLabel');
+
+        if (config.type === 'sqft') {
+            dimsLabel.innerText = "Dimensions (Feet)";
+            dimsInputs.innerHTML = `
+                <input type="number" id="buildLen" placeholder="Width" value="6" oninput="updateCalc()">
+                <input type="number" id="buildHt" placeholder="Height" value="8" oninput="updateCalc()">
+            `;
+        } else if (config.type === 'rft') {
+            dimsLabel.innerText = "Running Feet (Length)";
+            dimsInputs.innerHTML = `
+                <input type="number" id="buildLen" placeholder="Length" value="10" oninput="updateCalc()">
+            `;
+        } else if (config.type === 'unit') {
+            dimsLabel.innerText = "Quantity (Units)";
+            dimsInputs.innerHTML = `
+                <input type="number" id="buildQty" placeholder="Quantity" value="1" oninput="updateCalc()">
+            `;
+        }
 
         updateCalc();
     }
@@ -140,38 +205,41 @@
 
         if (currentService === 'building') {
             const item = document.getElementById('itemType').value;
-            const finish = document.getElementById('finishType').value;
-            summService.innerText = "Building";
-            summFinish.innerText = finish.charAt(0).toUpperCase() + finish.slice(1);
+            const config = rates.building[item];
 
-            if (rates.building.fixed[item]) {
-                total = rates.building.fixed[item][finish];
-                document.getElementById('buildingDims').style.opacity = '0.3';
-                document.getElementById('buildingDims').style.pointerEvents = 'none';
-                summDetails.innerText = item.split('_').join(' ').toUpperCase();
-            } else {
-                document.getElementById('buildingDims').style.opacity = '1';
-                document.getElementById('buildingDims').style.pointerEvents = 'auto';
+            summService.innerText = "Building";
+            summFinish.innerText = `₹${config.price} / ${config.type}`;
+
+            if (config.type === 'sqft') {
                 const len = parseFloat(document.getElementById('buildLen').value) || 0;
                 const ht = parseFloat(document.getElementById('buildHt').value) || 0;
                 const area = len * ht;
-                total = area * (rates.building[item][finish] || rates.building.other_building[finish]);
-                summDetails.innerText = `${item.toUpperCase()} (${len}' x ${ht}')`;
+                total = area * config.price;
+                summDetails.innerText = `${config.name} (${len}' x ${ht}')`;
+            } else if (config.type === 'rft') {
+                const len = parseFloat(document.getElementById('buildLen').value) || 0;
+                total = len * config.price;
+                summDetails.innerText = `${config.name} (${len} ft)`;
+            } else if (config.type === 'unit') {
+                const qty = parseFloat(document.getElementById('buildQty').value) || 0;
+                total = qty * config.price;
+                summDetails.innerText = `${config.name} (${qty} units)`;
             }
         } else {
             const type = document.getElementById('polishItem').value;
+            const config = rates.polishing[type];
             const area = parseFloat(document.getElementById('polishArea').value) || 0;
-            total = area * rates.polishing[type];
+            total = area * config.price;
 
             summService.innerText = "Polishing";
             summDetails.innerText = `Area: ${area} Sq. Ft.`;
-            summFinish.innerText = type.toUpperCase();
+            summFinish.innerText = `₹${config.price} / sqft (${config.name})`;
         }
 
         finalPriceDisp.innerText = total.toLocaleString('en-IN');
     }
 
     // Initialize
-    updateCalc();
+    updateBuildingInputs();
 </script>
 {% endblock %}

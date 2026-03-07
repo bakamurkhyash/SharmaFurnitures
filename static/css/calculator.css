@@ -259,7 +259,7 @@
     }
 
     .result-panel::after {
-        content: "Contact: +91 (Arvind Sharma) | Dated: " counter(page);
+        content: "Contact: Arvind Sharma: +91 91469 76831 | Dated: " counter(page);
         display: block;
         margin-top: 4rem;
         font-size: 0.9rem;
