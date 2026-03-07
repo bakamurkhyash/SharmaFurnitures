@@ -58,7 +58,7 @@
             <div id="polishingFields" style="display: none;">
                 <div class="form-group">
                     <label for="polishItem">Type of Service</label>
-                    <select id="polishItem" onchange="updateCalc()">
+                    <select id="polishItem" onchange="updatePreview()">
                         <optgroup label="Wood polish..">
                             <option value="hand_polish">Hand Polish (₹50/sqft)</option>
                             <option value="melamine_polish">Malamine Polish (₹80/sqft)</option>
@@ -80,8 +80,18 @@
                 <div class="form-group">
                     <label>Total Surface Area (Sq. Ft.)</label>
                     <input type="number" id="polishArea" placeholder="Enter total area" value="10"
-                        oninput="updateCalc()">
+                        oninput="updatePreview()">
                 </div>
+            </div>
+
+            <div class="form-action" style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #eee;">
+                <div
+                    style="margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; color: var(--primary-color); display: flex; justify-content: space-between;">
+                    <span>Item Preview:</span>
+                    <span>₹<span id="previewPrice">0</span></span>
+                </div>
+                <button class="btn" onclick="addToQuote()" style="width: 100%; border-radius: 4px;">Add to
+                    Quote</button>
             </div>
         </div>
 
@@ -92,23 +102,14 @@
             </div>
             <p style="opacity: 0.7; font-size: 0.8rem; margin-bottom: 2rem;">*Exc. material for some builds</p>
 
-            <div class="quotation-summary">
-                <div class="summary-item">
-                    <span>Service</span>
-                    <span id="summService">Building</span>
-                </div>
-                <div class="summary-item">
-                    <span>Details</span>
-                    <span id="summDetails">Wardrobe & bed</span>
-                </div>
-                <div class="summary-item">
-                    <span>Pricing</span>
-                    <span id="summFinish">1500 / sqft</span>
+            <div class="quotation-summary" id="quoteList">
+                <div class="empty-state" style="opacity: 0.7; font-style: italic; font-size: 0.9rem;">
+                    No items added yet.
                 </div>
             </div>
 
-            <div class="action-buttons">
-                <a href="/#contact" class="btn" style="flex: 2; border-color: var(--secondary-color);">Book
+            <div class="action-buttons" style="margin-top: auto; padding-top: 2rem;">
+                <a href="/#contact" class="btn no-print" style="flex: 2; border-color: var(--secondary-color);">Book
                     Consultation</a>
                 <button onclick="window.print()" class="btn print-btn"
                     style="flex: 1; background: transparent; color: var(--secondary-color); border-color: var(--secondary-color);">Print</button>
@@ -119,6 +120,8 @@
 
 <script>
     let currentService = 'building';
+    let quoteItems = [];
+    let currentPreviewItem = null;
 
     const rates = {
         building: {
@@ -128,15 +131,15 @@
             designer_partition: { price: 1500, type: 'sqft', name: 'Designer partition' },
             loft: { price: 950, type: 'sqft', name: 'Loft' },
             wooden_door: { price: 4500, type: 'unit', name: 'Wooden Door (with)' },
-            window_2_track: { price: 250, type: 'sqft', name: 'Window (2 tracks) (regular material)' },
-            window_3_track: { price: 290, type: 'sqft', name: 'Window (3 track) (regular material)' },
+            window_2_track: { price: 250, type: 'sqft', name: 'Window (2 tracks)' },
+            window_3_track: { price: 290, type: 'sqft', name: 'Window (3 track)' },
             sofa_cum_bed: { price: 1500, type: 'sqft', name: 'Sofa cum bed' },
             sofa_frame: { price: 300, type: 'sqft', name: 'Sofa Frame' },
-            ceiling: { price: 800, type: 'sqft', name: 'Ceiling (wooden)' },
+            ceiling: { price: 800, type: 'sqft', name: 'Ceiling' },
             kitchen_trolley_basket: { price: 3500, type: 'rft', name: 'Kitchen trolley (basket)' },
             kitchen_trolley_tandem: { price: 6500, type: 'rft', name: 'Kitchen trolley (tandem)' },
             kitchen_wardrobe: { price: 1200, type: 'sqft', name: 'Kitchen wardrobe' },
-            kitchen_granite_door: { price: 1050, type: 'sqft', name: 'Kitchen granite wardrobe door' },
+            kitchen_granite_door: { price: 1050, type: 'sqft', name: 'Kitchen granite door' },
             palmet: { price: 550, type: 'sqft', name: 'Palmet' },
             office_furniture: { price: 1500, type: 'sqft', name: 'Office furniture' },
             counter: { price: 1300, type: 'sqft', name: 'Counter' },
@@ -165,7 +168,7 @@
         if (service === 'building') {
             updateBuildingInputs();
         } else {
-            updateCalc();
+            updatePreview();
         }
     }
 
@@ -178,65 +181,125 @@
         if (config.type === 'sqft') {
             dimsLabel.innerText = "Dimensions (Feet)";
             dimsInputs.innerHTML = `
-                <input type="number" id="buildLen" placeholder="Width" value="6" oninput="updateCalc()">
-                <input type="number" id="buildHt" placeholder="Height" value="8" oninput="updateCalc()">
+                <input type="number" id="buildLen" placeholder="Width" value="6" oninput="updatePreview()">
+                <input type="number" id="buildHt" placeholder="Height" value="8" oninput="updatePreview()">
             `;
         } else if (config.type === 'rft') {
             dimsLabel.innerText = "Running Feet (Length)";
             dimsInputs.innerHTML = `
-                <input type="number" id="buildLen" placeholder="Length" value="10" oninput="updateCalc()">
+                <input type="number" id="buildLen" placeholder="Length" value="10" oninput="updatePreview()">
             `;
         } else if (config.type === 'unit') {
             dimsLabel.innerText = "Quantity (Units)";
             dimsInputs.innerHTML = `
-                <input type="number" id="buildQty" placeholder="Quantity" value="1" oninput="updateCalc()">
+                <input type="number" id="buildQty" placeholder="Quantity" value="1" oninput="updatePreview()">
             `;
         }
 
-        updateCalc();
+        updatePreview();
     }
 
-    function updateCalc() {
+    function updatePreview() {
         let total = 0;
-        const summService = document.getElementById('summService');
-        const summDetails = document.getElementById('summDetails');
-        const summFinish = document.getElementById('summFinish');
-        const finalPriceDisp = document.getElementById('finalPrice');
+        let detailsStr = '';
+        let serviceStr = '';
+        let dimsStr = '';
 
         if (currentService === 'building') {
             const item = document.getElementById('itemType').value;
             const config = rates.building[item];
-
-            summService.innerText = "Building";
-            summFinish.innerText = `₹${config.price} / ${config.type}`;
+            serviceStr = 'Building: ' + config.name;
 
             if (config.type === 'sqft') {
                 const len = parseFloat(document.getElementById('buildLen').value) || 0;
                 const ht = parseFloat(document.getElementById('buildHt').value) || 0;
                 const area = len * ht;
                 total = area * config.price;
-                summDetails.innerText = `${config.name} (${len}' x ${ht}')`;
+                dimsStr = `${len}' x ${ht}' (${area} sqft)`;
+                detailsStr = `₹${config.price}/sqft × ${area} sqft`;
             } else if (config.type === 'rft') {
                 const len = parseFloat(document.getElementById('buildLen').value) || 0;
                 total = len * config.price;
-                summDetails.innerText = `${config.name} (${len} ft)`;
+                dimsStr = `${len} running ft`;
+                detailsStr = `₹${config.price}/rft × ${len} ft`;
             } else if (config.type === 'unit') {
                 const qty = parseFloat(document.getElementById('buildQty').value) || 0;
                 total = qty * config.price;
-                summDetails.innerText = `${config.name} (${qty} units)`;
+                dimsStr = `${qty} units`;
+                detailsStr = `₹${config.price}/unit × ${qty}`;
             }
         } else {
             const type = document.getElementById('polishItem').value;
             const config = rates.polishing[type];
             const area = parseFloat(document.getElementById('polishArea').value) || 0;
             total = area * config.price;
-
-            summService.innerText = "Polishing";
-            summDetails.innerText = `Area: ${area} Sq. Ft.`;
-            summFinish.innerText = `₹${config.price} / sqft (${config.name})`;
+            serviceStr = 'Polishing: ' + config.name;
+            dimsStr = `${area} sqft`;
+            detailsStr = `₹${config.price}/sqft × ${area} sqft`;
         }
 
-        finalPriceDisp.innerText = total.toLocaleString('en-IN');
+        currentPreviewItem = {
+            service: serviceStr,
+            dims: dimsStr,
+            details: detailsStr,
+            price: total,
+            id: Date.now()
+        };
+
+        document.getElementById('previewPrice').innerText = total.toLocaleString('en-IN');
+    }
+
+    function addToQuote() {
+        if (!currentPreviewItem || currentPreviewItem.price <= 0) return;
+        quoteItems.push({ ...currentPreviewItem });
+        renderQuoteList();
+    }
+
+    function removeQuoteItem(id) {
+        quoteItems = quoteItems.filter(item => item.id !== id);
+        renderQuoteList();
+    }
+
+    function renderQuoteList() {
+        const listEl = document.getElementById('quoteList');
+        const finalPriceEl = document.getElementById('finalPrice');
+
+        let grandTotal = 0;
+
+        if (quoteItems.length === 0) {
+            listEl.innerHTML = `
+                <div class="empty-state" style="opacity: 0.7; font-style: italic; font-size: 0.9rem;">
+                    No items added yet.
+                </div>
+            `;
+        } else {
+            listEl.innerHTML = `
+                <div class="summary-item" style="font-weight: 700; border-bottom: 2px solid var(--primary-color); padding-bottom: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <div style="flex: 2; min-width: 150px;">Service & Item</div>
+                    <div style="flex: 1; min-width: 100px;">Dimensions</div>
+                    <div style="flex: 1; min-width: 100px;">Rate Details</div>
+                    <div style="text-align: right; width: 100px;">Total</div>
+                    <div class="no-print" style="width: 30px;"></div>
+                </div>
+            `;
+
+            quoteItems.forEach(item => {
+                grandTotal += item.price;
+                listEl.innerHTML += `
+                    <div class="summary-item quote-item-card" style="display: flex; gap: 1rem; align-items: start; margin-bottom: 1rem; flex-wrap: wrap;">
+                        <div style="flex: 2; font-weight: 600; font-size: 0.95rem; min-width: 150px;">${item.service}</div>
+                        <div style="flex: 1; font-size: 0.9rem; opacity: 0.8; min-width: 100px;">${item.dims}</div>
+                        <div style="flex: 1; font-size: 0.9rem; opacity: 0.8; min-width: 100px;">${item.details}</div>
+                        <div style="text-align: right; width: 100px; font-weight: 600;">₹${item.price.toLocaleString('en-IN')}</div>
+                        <div class="no-print" style="width: 30px; text-align: right;">
+                            <button class="remove-btn" onclick="removeQuoteItem(${item.id})" title="Remove item" style="padding: 0;">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        finalPriceEl.innerText = grandTotal.toLocaleString('en-IN');
     }
 
     // Initialize
