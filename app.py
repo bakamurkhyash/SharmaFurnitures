@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 TELEGRAM_BOT_TOKEN = "8088454102:AAEbeQN_szEn2nGs9pKLCAzyZegoWphU7CY"
 TELEGRAM_CHAT_ID = "7462545196"
-VERCEL_URL = "https://sharma-furnitures-seven.vercel.app/"  # Replace with your actual Vercel URL
+VERCEL_URL = "https://sharma-furnitures-seven.vercel.app"  # Replace with your actual Vercel URL
 
 cloudinary.config(
     cloud_name=CLOUDINARY_CLOUD_NAME,
