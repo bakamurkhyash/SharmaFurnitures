@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 TELEGRAM_BOT_TOKEN = "8088454102:AAEbeQN_szEn2nGs9pKLCAzyZegoWphU7CY"
 TELEGRAM_CHAT_ID = "7462545196"
-VERCEL_URL = "https://sharma-furnitures-seven.vercel.app"  # Replace with your actual Vercel URL
+WEBHOOK_URL = "https://sharma-furnitures-seven.vercel.app/webhook"  # Replace with your actual Vercel URL
 
 cloudinary.config(
     cloud_name=CLOUDINARY_CLOUD_NAME,
@@ -34,26 +34,14 @@ def index():
 @app.route("/webhook", methods=["POST"])
 def webhook():
     data = request.get_json()
+    update = Update.de_json(data, ptb_app.bot)
+    asyncio.run(ptb_app.process_update(update))
+    return "ok", 200
 
-    async def process():
-        from bot import get_bot_app
-        bot_app = get_bot_app()
-        await bot_app.initialize()
-        await bot_app.process_update(Update.de_json(data, bot_app.bot))
-        await bot_app.shutdown()
-
-    asyncio.run(process())
-    return jsonify({"ok": True})
-
-
-@app.route("/set-webhook", methods=["GET"])
+@app.route("/set_webhook")
 def set_webhook():
-    async def register():
-        bot = Bot(token=TELEGRAM_BOT_TOKEN)
-        await bot.set_webhook(f"{VERCEL_URL}/webhook")
-
-    asyncio.run(register())
-    return jsonify({"ok": True, "webhook": f"{VERCEL_URL}/webhook"})
+    asyncio.run(ptb_app.bot.set_webhook(WEBHOOK_URL))
+    return "Webhook set!", 200
 
 
 @app.route('/gallery')
