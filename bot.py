@@ -5,11 +5,9 @@ import os
 import cloudinary
 import glob
 
-app_flask = Flask(__name__)
 
-TOKEN = "YOUR_BOT_TOKEN"
-WEBHOOK_URL = "https://yourdomain.com/webhook"  # must be HTTPS
-ALLOWED_CHAT_ID = 123456789
+TOKEN = "8088454102:AAEbeQN_szEn2nGs9pKLCAzyZegoWphU7CY"  # must be HTTPS
+ALLOWED_CHAT_ID = 7462545196
 img_names = []
 
 # Build the telegram app once

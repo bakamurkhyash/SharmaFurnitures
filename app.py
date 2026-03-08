@@ -5,6 +5,7 @@ from cloudinary.utils import cloudinary_url
 import requests
 import asyncio
 from telegram import Update, Bot
+from bot import *
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
 CLOUDINARY_CLOUD_NAME = "dlkjvnxpu"
