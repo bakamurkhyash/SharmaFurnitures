@@ -2,3 +2,5 @@ flask
 gunicorn
 python-dotenv
 cloudinary
+python-telegram-bot
+requests

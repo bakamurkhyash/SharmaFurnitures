@@ -78,9 +78,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Total Surface Area (Sq. Ft.)</label>
-                    <input type="number" id="polishArea" placeholder="Enter total area" value="10"
-                        oninput="updatePreview()">
+                    <label>Dimensions (Feet)</label>
+                    <div class="dim-input-group">
+                        <input type="number" id="polishLen" placeholder="Width" value="6" oninput="updatePreview()">
+                        <input type="number" id="polishHt" placeholder="Height" value="8" oninput="updatePreview()">
+                    </div>
                 </div>
             </div>
 
@@ -231,10 +233,12 @@
         } else {
             const type = document.getElementById('polishItem').value;
             const config = rates.polishing[type];
-            const area = parseFloat(document.getElementById('polishArea').value) || 0;
+            const len = parseFloat(document.getElementById('polishLen').value) || 0;
+            const ht = parseFloat(document.getElementById('polishHt').value) || 0;
+            const area = len * ht;
             total = area * config.price;
             serviceStr = 'Polishing: ' + config.name;
-            dimsStr = `${area} sqft`;
+            dimsStr = `${len}' x ${ht}' (${area} sqft)`;
             detailsStr = `₹${config.price}/sqft × ${area} sqft`;
         }
 
