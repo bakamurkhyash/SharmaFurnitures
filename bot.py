@@ -63,12 +63,20 @@ async def download_photo(photo, context, filename=None):
             os.remove(str(name))
             print(f"Cleaned up: {name}")
 
-def main():
-    app = Application.builder().token("8088454102:AAEbeQN_szEn2nGs9pKLCAzyZegoWphU7CY").build()
+def setup_bot():
+    token = "8088454102:AAEbeQN_szEn2nGs9pKLCAzyZegoWphU7CY"
+    app = Application.builder().token(token).build()
     ALLOWED_CHAT_ID = 7462545196
 
     app.add_handler(MessageHandler(
-        filters.PHOTO & filters.Chat(ALLOWED_CHAT_ID),  # ← built-in filter
+        filters.PHOTO & filters.Chat(ALLOWED_CHAT_ID),
         handle_image
     ))
+    return app
+
+def main():
+    app = setup_bot()
     app.run_polling()
+
+if __name__ == "__main__":
+    main()
