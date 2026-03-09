@@ -2,7 +2,7 @@ from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 import asyncio
 import os
-import cloudinary
+import cloudinary.uploader
 
 CLOUDINARY_CLOUD_NAME = "dlkjvnxpu"
 CLOUDINARY_API_KEY = "288393286726996"
@@ -52,10 +52,16 @@ async def download_photo(photo, context, filename=None):
     file = await context.bot.get_file(photo.file_id)
     name = filename or f"{photo.file_id}.jpg"
     image_names.append(name)
-    await file.download_to_drive(str(name))
-    cloudinary.uploader.upload(str(name))
-    os.remove(str(name))
-    print(f"Saved: {name}")
+    try:
+        await file.download_to_drive(str(name))
+        await asyncio.to_thread(cloudinary.uploader.upload, str(name))
+        print(f"Uploaded and Saved: {name}")
+    except Exception as e:
+        print(f"Error uploading {name}: {e}")
+    finally:
+        if os.path.exists(name):
+            os.remove(str(name))
+            print(f"Cleaned up: {name}")
 
 def main():
     app = Application.builder().token("8088454102:AAEbeQN_szEn2nGs9pKLCAzyZegoWphU7CY").build()

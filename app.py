@@ -24,21 +24,20 @@ cloudinary.config(
     api_secret=CLOUDINARY_API_SECRET
 )
 
-result = cloudinary.api.resources(type="upload", max_results=500)
-
-
 @app.route('/')
 def index():
-    return render_template('index.html', images=result.get('resources', [])[:6])
-
+    result = cloudinary.api.resources(type="upload", max_results=6)
+    return render_template('index.html', images=result.get('resources', []))
 
 @app.route('/gallery')
 def gallery():
+    result = cloudinary.api.resources(type="upload", max_results=500)
     return result
 
 
 @app.route('/portfolio')
 def portfolio():
+    result = cloudinary.api.resources(type="upload", max_results=500)
     return render_template('portfolio.html', images=result.get('resources', []))
 
 
@@ -48,5 +47,8 @@ def calculator():
 
 
 if __name__ == '__main__':
-    main()
-    app.run(debug=True)
+    import threading
+
+    threading.Thread(target=main, daemon=True).start()
+    
+    app.run(debug=True, use_reloader=False)
