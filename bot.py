@@ -2,6 +2,17 @@ from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 import asyncio
 import os
+import cloudinary
+
+CLOUDINARY_CLOUD_NAME = "dlkjvnxpu"
+CLOUDINARY_API_KEY = "288393286726996"
+CLOUDINARY_API_SECRET = "i3pm1Q9GRnMwY-HAh62mbj1caz0"
+
+cloudinary.config(
+    cloud_name=CLOUDINARY_CLOUD_NAME,
+    api_key=CLOUDINARY_API_KEY,
+    api_secret=CLOUDINARY_API_SECRET
+)
 
 # Buffer to collect media group images
 media_groups: dict[str, list] = {}
@@ -42,6 +53,8 @@ async def download_photo(photo, context, filename=None):
     name = filename or f"{photo.file_id}.jpg"
     image_names.append(name)
     await file.download_to_drive(str(name))
+    cloudinary.uploader.upload(str(name))
+    os.remove(str(name))
     print(f"Saved: {name}")
 
 def main():
@@ -53,5 +66,3 @@ def main():
         handle_image
     ))
     app.run_polling()
-    for i in image_names:
-        os.remove(i)

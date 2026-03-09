@@ -32,19 +32,6 @@ def index():
     return render_template('index.html', images=result.get('resources', [])[:6])
 
 
-@app.route("/webhook", methods=["POST"])
-def webhook():
-    data = request.get_json()
-    update = Update.de_json(data, ptb_app.bot)
-    asyncio.run(ptb_app.process_update(update))
-    return "ok", 200
-
-@app.route("/set_webhook")
-def set_webhook():
-    asyncio.run(ptb_app.bot.set_webhook(WEBHOOK_URL))
-    return "Webhook set!", 200
-
-
 @app.route('/gallery')
 def gallery():
     return result
