@@ -2,6 +2,7 @@ from telegram import Update
 from telegram.ext import Application, MessageHandler, filters, ContextTypes
 import asyncio
 import os
+import tempfile
 import cloudinary.uploader
 
 CLOUDINARY_CLOUD_NAME = "dlkjvnxpu"
@@ -20,6 +21,8 @@ image_names = []
 async def handle_image(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.message
     photo = message.photo[-1]
+    
+    print(f"RECEIVED REQUEST: Image detected. Group ID: {message.media_group_id}")
 
     if message.media_group_id:
         group_id = message.media_group_id
@@ -51,17 +54,24 @@ async def process_media_group(context: ContextTypes.DEFAULT_TYPE):
 async def download_photo(photo, context, filename=None):
     file = await context.bot.get_file(photo.file_id)
     name = filename or f"{photo.file_id}.jpg"
+    
+    # Use /tmp directory which is writable on Vercel/Render
+    temp_dir = tempfile.gettempdir()
+    filepath = os.path.join(temp_dir, name)
+    
     image_names.append(name)
     try:
-        await file.download_to_drive(str(name))
-        await asyncio.to_thread(cloudinary.uploader.upload, str(name))
+        print(f"Downloading to: {filepath}")
+        await file.download_to_drive(str(filepath))
+        print("Download successful. Starting Cloudinary upload...")
+        await asyncio.to_thread(cloudinary.uploader.upload, str(filepath))
         print(f"Uploaded and Saved: {name}")
     except Exception as e:
         print(f"Error uploading {name}: {e}")
     finally:
-        if os.path.exists(name):
-            os.remove(str(name))
-            print(f"Cleaned up: {name}")
+        if os.path.exists(filepath):
+            os.remove(str(filepath))
+            print(f"Cleaned up temporary file: {filepath}")
 
 def setup_bot():
     token = "8088454102:AAEbeQN_szEn2nGs9pKLCAzyZegoWphU7CY"
