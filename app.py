@@ -5,8 +5,7 @@ from cloudinary.utils import cloudinary_url
 import requests
 import asyncio
 from telegram import Update, Bot
-from bot import *
-import threading
+from bot import handle_image
 
 CLOUDINARY_CLOUD_NAME = "dlkjvnxpu"
 CLOUDINARY_API_KEY = "288393286726996"
@@ -23,9 +22,6 @@ cloudinary.config(
     api_key=CLOUDINARY_API_KEY,
     api_secret=CLOUDINARY_API_SECRET
 )
-
-# Initialize bot application
-bot_app = setup_bot()
 
 @app.route('/')
 def index():
@@ -48,15 +44,17 @@ def calculator():
 
 @app.route('/webhook', methods=['POST'])
 async def webhook():
-    """Handle incoming Telegram updates via Webhook."""
+    """Handle incoming Telegram updates completely statelessly."""
     try:
-        if not bot_app.bot_data and not getattr(bot_app, '_initialized', False):
-            # Fallback initialization check (ptb internals)
-            await bot_app.initialize()
-            await bot_app.start()
-
-        update = Update.de_json(request.get_json(force=True), bot_app.bot)
-        await bot_app.process_update(update)
+        # Create a fresh Bot instance specifically FOR THIS REQUEST.
+        # This guarantees it doesn't use closed event loops.
+        async with Bot(TELEGRAM_BOT_TOKEN) as bot:
+            update = Update.de_json(request.get_json(force=True), bot)
+            
+            # Simple manual routing (stateless, no background queues)
+            if update.message and update.message.photo:
+                await handle_image(update, bot)
+                
         return 'OK', 200
     except Exception as e:
         print(f"Webhook error: {e}")
@@ -65,12 +63,9 @@ async def webhook():
 @app.route('/set_webhook')
 async def set_webhook():
     """Manually trigger webhook registration with Telegram."""
-    if not getattr(bot_app, '_initialized', False):
-        await bot_app.initialize()
-        await bot_app.start()
-        
-    success = await bot_app.bot.set_webhook(WEBHOOK_URL)
-    return f"Webhook set to {WEBHOOK_URL}: {success}"
+    async with Bot(TELEGRAM_BOT_TOKEN) as bot:
+        success = await bot.set_webhook(WEBHOOK_URL)
+        return f"Webhook set to {WEBHOOK_URL}: {success}"
 
 if __name__ == '__main__':
     # Run Flask
