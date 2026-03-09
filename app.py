@@ -16,7 +16,7 @@ app = Flask(__name__)
 
 TELEGRAM_BOT_TOKEN = "8088454102:AAEbeQN_szEn2nGs9pKLCAzyZegoWphU7CY"
 TELEGRAM_CHAT_ID = "7462545196"
-WEBHOOK_URL = "https://sharmafurnitures.onrender.com/webhook"
+WEBHOOK_URL = "https://sharma-furnitures-seven.vercel.app/webhook"
 
 cloudinary.config(
     cloud_name=CLOUDINARY_CLOUD_NAME,
