@@ -50,6 +50,11 @@ def calculator():
 async def webhook():
     """Handle incoming Telegram updates via Webhook."""
     try:
+        if not bot_app.bot_data and not getattr(bot_app, '_initialized', False):
+            # Fallback initialization check (ptb internals)
+            await bot_app.initialize()
+            await bot_app.start()
+
         update = Update.de_json(request.get_json(force=True), bot_app.bot)
         await bot_app.process_update(update)
         return 'OK', 200
@@ -60,20 +65,13 @@ async def webhook():
 @app.route('/set_webhook')
 async def set_webhook():
     """Manually trigger webhook registration with Telegram."""
+    if not getattr(bot_app, '_initialized', False):
+        await bot_app.initialize()
+        await bot_app.start()
+        
     success = await bot_app.bot.set_webhook(WEBHOOK_URL)
     return f"Webhook set to {WEBHOOK_URL}: {success}"
 
-def start_bot_async():
-    """Initialize bot application in the background."""
-    asyncio.run(bot_app.initialize())
-
 if __name__ == '__main__':
-    # Initialize bot in background
-    threading.Thread(target=start_bot_async, daemon=True).start()
-    
     # Run Flask
     app.run(debug=True, use_reloader=False)
-else:
-    # Production (e.g. Gunicorn)
-    # Start bot initialization in a separate thread to avoid blocking worker startup
-    threading.Thread(target=start_bot_async, daemon=True).start()
