@@ -14,7 +14,7 @@ CLOUDINARY_API_SECRET = "i3pm1Q9GRnMwY-HAh62mbj1caz0"
 app = Flask(__name__)
 
 TELEGRAM_BOT_TOKEN = "8088454102:AAEbeQN_szEn2nGs9pKLCAzyZegoWphU7CY"
-TELEGRAM_CHAT_ID = "7462545196"
+TELEGRAM_CHAT_ID = "5353506001"
 WEBHOOK_URL = "https://sharma-furnitures-seven.vercel.app/webhook"
 
 cloudinary.config(
