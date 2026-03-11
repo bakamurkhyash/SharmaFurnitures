@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 import cloudinary
 import cloudinary.api
 from cloudinary.utils import cloudinary_url
@@ -41,6 +41,11 @@ def portfolio():
 @app.route('/calculator')
 def calculator():
     return render_template('calculator.html')
+
+@app.route('/robots.txt')
+@app.route('/sitemap.xml')
+def static_from_root():
+    return send_from_directory(app.static_folder, request.path[1:])
 
 @app.route('/webhook', methods=['POST'])
 async def webhook():

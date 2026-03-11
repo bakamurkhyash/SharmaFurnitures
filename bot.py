@@ -33,7 +33,6 @@ async def download_photo(photo, bot: Bot, filename=None):
     file = await bot.get_file(photo.file_id)
     name = filename or f"{photo.file_id}.jpg"
     
-    # Use /tmp directory which is writable on Vercel/Render
     temp_dir = tempfile.gettempdir()
     filepath = os.path.join(temp_dir, name)
     

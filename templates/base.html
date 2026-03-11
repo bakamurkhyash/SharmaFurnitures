@@ -4,8 +4,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Sharma Furniture offers bespoke handcrafted solid wood furniture. Custom designs, on-spot building & more by artisan Arvind Sharma in India.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://sharma-furnitures-seven.vercel.app{{ request.path }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sharma-furnitures-seven.vercel.app{{ request.path }}">
+    <meta property="og:title" content="Sharma Furniture | Fine Bespoke Craftsmanship">
+    <meta property="og:description"
+        content="Sharma Furniture offers bespoke handcrafted solid wood furniture. Custom designs, on-spot building & more by artisan Arvind Sharma.">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://sharma-furnitures-seven.vercel.app{{ request.path }}">
+    <meta property="twitter:title" content="Sharma Furniture | Fine Bespoke Craftsmanship">
+    <meta property="twitter:description"
+        content="Sharma Furniture offers bespoke handcrafted solid wood furniture. Custom designs, on-spot building & more by artisan Arvind Sharma.">
+
     <title>{% block title %}Sharma Furniture | Fine Bespoke Craftsmanship{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "Sharma Furniture",
+      "image": "https://sharma-furnitures-seven.vercel.app/static/images/arvind.jpeg",
+      "telephone": "+91 9146976831",
+      "url": "https://sharma-furnitures-seven.vercel.app/",
+      "description": "Bespoke handcrafted furniture and custom woodworking by artisan Arvind Sharma."
+    }
+    </script>
     {% block head %}{% endblock %}
 </head>
 
