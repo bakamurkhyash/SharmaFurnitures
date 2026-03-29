@@ -90,6 +90,10 @@
         transform: translateY(0);
     }
 
+    .work-overlay {
+        pointer-events: none; /* Allow clicks to pass through to work-item on mobile */
+    }
+
     .work-overlay h3 {
         margin: 0;
         font-size: 1.2rem;
@@ -131,6 +135,92 @@
             padding: 2rem 5%;
         }
     }
+
+    /* Lightbox Modal */
+    .lightbox {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        z-index: 2000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+        padding: 40px;
+        backdrop-filter: blur(10px);
+    }
+
+    .lightbox.active {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .lightbox-content {
+        max-width: 100%;
+        max-height: 90vh;
+        object-fit: contain;
+        transform: scale(0.95);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        border-radius: 4px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .lightbox.active .lightbox-content {
+        transform: scale(1);
+    }
+
+    .close-lightbox {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: white;
+        font-size: 2.5rem;
+        cursor: pointer;
+        transition: var(--transition);
+        z-index: 2001;
+        line-height: 1;
+        padding: 15px; /* Increase tap area for mobile */
+    }
+
+    @media (max-width: 768px) {
+        .close-lightbox {
+            top: 10px;
+            right: 10px;
+        }
+        
+        .lightbox {
+            padding: 20px;
+        }
+    }
+
+    .close-lightbox:hover {
+        transform: scale(1.2) rotate(90deg);
+        color: var(--secondary-color);
+    }
+
+    .lightbox-caption {
+        position: absolute;
+        bottom: 40px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: white;
+        padding: 0 20px;
+    }
+
+    .lightbox-caption h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 400;
+        letter-spacing: 1px;
+    }
 </style>
 {% endblock %}
 
@@ -144,7 +234,7 @@
 
 <section class="work-grid">
     {% for image in images %}
-    <div class="work-item reveal">
+    <div class="work-item reveal" onclick="">
         <img src="{{ image.secure_url }}"
             alt="Bespoke {{ image.display_name.replace('_', ' ') if image.display_name else 'Handcrafted Solid Wood Furniture' }} by Sharma Furniture"
             loading="lazy">
@@ -159,6 +249,15 @@
     </div>
     {% endfor %}
 </section>
+
+<!-- Lightbox Modal -->
+<div id="lightbox" class="lightbox">
+    <span class="close-lightbox">&times;</span>
+    <img id="lightboxImg" class="lightbox-content" src="" alt="Full size furniture preview">
+    <div class="lightbox-caption">
+        <h3 id="lightboxCaption"></h3>
+    </div>
+</div>
 
 <script>
     // Intersection Observer for reveal animations
@@ -175,5 +274,43 @@
     }, observerOptions);
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Lightbox Logic
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const closeBtn = document.querySelector('.close-lightbox');
+
+    document.querySelectorAll('.work-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const img = item.querySelector('img');
+            const title = item.querySelector('h3').textContent;
+            
+            lightboxImg.src = img.src;
+            lightboxCaption.textContent = title;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        });
+    });
+
+    const closeLightbox = () => {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = ''; // Restore scrolling
+        setTimeout(() => {
+            lightboxImg.src = ''; // Clear source after animation
+        }, 400);
+    };
+
+    closeBtn.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            closeLightbox();
+        }
+    });
 </script>
 {% endblock %}
