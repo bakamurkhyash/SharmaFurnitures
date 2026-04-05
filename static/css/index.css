@@ -117,7 +117,7 @@ nav {
     justify-content: center;
     text-align: center;
     padding: 0 10%;
-    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/static/images/hero_furniture.jpg') center/cover no-repeat;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?cs=srgb&dl=pexels-pixabay-276724.jpg&fm=jpg') center/cover no-repeat;
     /* Placeholder fallback */
     background-color: var(--primary-color);
     color: white;
