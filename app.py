@@ -69,7 +69,7 @@ async def webhook():
 async def set_webhook():
     """Manually trigger webhook registration with Telegram."""
     async with Bot(TELEGRAM_BOT_TOKEN) as bot:
-        success = await bot.set_webhook(WEBHOOK_URL)
+        success = await bot.set_webhook(WEBHOOK_URL) 
         return f"Webhook set to {WEBHOOK_URL}: {success}"
 
 if __name__ == '__main__':
